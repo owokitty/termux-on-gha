@@ -68,7 +68,7 @@ jobs:
             if tty >/dev/null 2>&1; then
               current_tty="$(tty)"
             fi
-            install_log="$(apt list | grep apt | tee $current_tty)"
+            install_log="$(/entrypoint.sh apt list | grep apt | tee $current_tty)"
             echo "$install_log"
           }
           test_function

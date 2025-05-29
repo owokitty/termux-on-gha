@@ -62,7 +62,10 @@ jobs:
           /entrypoint.sh pip install meson
       - name: build
         run: |
-          current_tty="$(tty)"
+          declare current_tty
+          if tty >/dev/null 2>&1; then
+            current_tty="$(tty)"
+          fi
           install_log="$(echo "bla bla" | tee "$current_tty")"
           echo "$install_log"
           touch artifact

@@ -62,7 +62,8 @@ jobs:
           /entrypoint.sh pip install meson
       - name: build
         run: |
-          install_log="$(echo "bla bla" | tee /dev/tty)"
+          current_tty="$(tty)"
+          install_log="$(echo "bla bla" | tee "$current_tty")"
           echo "$install_log"
           touch artifact
       - uses: actions/upload-artifact@v4.6.0

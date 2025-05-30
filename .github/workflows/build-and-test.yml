@@ -63,12 +63,10 @@ jobs:
       - name: build
         run: |
           test_function(){
-            local current_tty
-            
-            if tty >/dev/null 2>&1; then
-              current_tty="$(tty)"
-            fi
-            install_log="$(/entrypoint.sh apt list | grep apt | tee $current_tty)"
+            local install_log install_command
+            exec 3>&1
+            install_command="/entrypoint.sh apt list | grep apt"
+            install_log="$(script -q -e -c "$install_command" /dev/null | tee /dev/fd/3)"
             echo "$install_log"
           }
           test_function

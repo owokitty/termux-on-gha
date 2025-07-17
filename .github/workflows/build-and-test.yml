@@ -66,6 +66,7 @@ jobs:
           /entrypoint.sh mv termux-packages/* .
           /entrypoint.sh sed -i -e 's|apt dist-upgrade|apt dist-upgrade -y|g' -e 's|apt install|apt install -y|g' scripts/setup-termux.sh
           /entrypoint.sh scripts/setup-termux.sh
+          /entrypoint.sh login -c "termux-info"
           /entrypoint.sh login -c "./build-package.sh -I -f grep"
       - uses: actions/upload-artifact@v4.6.0
         with:

@@ -61,11 +61,16 @@ jobs:
           /entrypoint.sh pkg install -y ninja clang python git
           /entrypoint.sh pip install meson
       - name: build
-        run: touch artifact
+        run: |
+          /entrypoint.sh git clone https://github.com/termux/termux-packages.git
+          /entrypoint.sh mv termux-packages/* .
+          /entrypoint.sh sed -i -e 's|apt dist-upgrade|apt dist-upgrade -y|g' -e 's|apt install|apt install -y|g' scripts/setup-termux.sh
+          /entrypoint.sh scripts/setup-termux.sh
+          /entrypoint.sh login -c "./build-package.sh -I -f grep"
       - uses: actions/upload-artifact@v4.6.0
         with:
           name: artifact-${{ matrix.architecture }}
-          path: artifact
+          path: output/*
 
   # This is the ideal way termux-docker would work with GHA.
   broken-ideal:

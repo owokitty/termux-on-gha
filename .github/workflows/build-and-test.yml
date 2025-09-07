@@ -64,10 +64,14 @@ jobs:
         run: |
           /entrypoint.sh git clone https://github.com/termux/termux-packages.git
           /entrypoint.sh mv termux-packages/* .
+          echo "installing debpython PR which is needed to prevent error: ModuleNotFoundError: No module named 'distutils'"
+          /entrypoint.sh login -c "curl https://patch-diff.githubusercontent.com/raw/termux/termux-packages/pull/23652.patch | git apply -v"
           /entrypoint.sh sed -i -e 's|apt dist-upgrade|apt dist-upgrade -y|g' -e 's|apt install|apt install -y|g' scripts/setup-termux.sh
           /entrypoint.sh scripts/setup-termux.sh
+          /entrypoint.sh pkg install -y x11-repo root-repo
           /entrypoint.sh login -c "termux-info"
-          /entrypoint.sh login -c "./build-package.sh -I -f grep"
+          /entrypoint.sh login -c "curl https://patch-diff.githubusercontent.com/raw/termux/termux-packages/pull/25995.patch | git apply -v"
+          /entrypoint.sh login -c "./build-package.sh -I -f telegram-desktop"
       - uses: actions/upload-artifact@v4.6.0
         with:
           name: artifact-${{ matrix.architecture }}

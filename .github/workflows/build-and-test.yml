@@ -58,6 +58,14 @@ jobs:
       # https://github.com/actions/toolkit/blob/930c89072712a3aac52d74b23338f00bb0cfcb24/packages/io/src/io-util.ts#L167-L177
       - name: fix executable bit for all binaries in $PREFIX/bin for all users
         run: chmod -R o+x ${PREFIX}/bin
+      - name: test pacman
+        run: |
+          /entrypoint.sh login -c "pkg install -y pacman"
+          /entrypoint.sh login -c "pacman-db-upgrade"
+          /entrypoint.sh login -c "pacman-key --init"
+          /entrypoint.sh login -c "pacman-key --populate"
+          /entrypoint.sh login -c "pacman -Sy"
+          /entrypoint.sh login -c "pacman -S coreutils --debug --noconfirm --overwrite=*"
       - name: install bionic-libc nodejs to force compatibility with actions/checkout and actions/upload-artifact
         run: |
           /entrypoint.sh pkg install -y nodejs-lts
